@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+
+    <title>Storent</title>
+
+</head>
+
+<body>
+
+    <h1>Storent</h1>
+
+    <button id="PowerOnLight">PowerOn Light</button>
+    <button id="PowerOffLight">"PowerOff Light"</button>
+
+    <div style="width:30%;">
+
+        <canvas id="myCanvas1"></canvas>
+        <canvas id="myCanvas2"></canvas>
+        <canvas id="myCanvas3"></canvas>
+
+    </div>
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
+
+    <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+
+    <script>
+        const socket = io();
+
+        let counter = 0;
+
+        socket.on('arduino:data', function (dataSerial) {
+
+            console.log(dataSerial);
+
+            chart1.data.labels.push(counter);
+            chart1.data.datasets.forEach(dataset => {
+
+                dataset.data.push(dataSerial.value1);
+
+            });
+
+            chart2.data.labels.push(counter);
+            chart2.data.datasets.forEach(dataset => {
+
+                dataset.data.push(dataSerial.value2);
+
+            });
+
+            chart3.data.labels.push(counter);
+            chart3.data.datasets.forEach(dataset => {
+
+                dataset.data.push(dataSerial.value3);
+
+            });
+
+
+            counter++;
+            chart1.update();
+            chart2.update();
+            chart3.update();
+
+
+        });
+
+        var ctx = document.getElementById("myCanvas1").getContext('2d');
+        var chart1 = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ["TEMPERATURE (ºC)"],
+                datasets: [{
+
+                    label: "TEMPERATURE (ºC)",
+                    fill: false,
+                    //backgroundColor: 'rgb(52, 73, 94)',
+                    borderColor: 'rgb(41, 128, 185)',
+                    data: []
+
+
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        var ctx = document.getElementById("myCanvas2").getContext('2d');
+        var chart2 = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ["HUMIDITY (%)"],
+                datasets: [{
+
+                    label: "HUMIDITY (%)",
+                    fill: false,
+                    //backgroundColor: 'rgb(52, 73, 94)',
+                    borderColor: 'rgb(41, 128, 185)',
+                    data: []
+
+
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        var ctx = document.getElementById("myCanvas3").getContext('2d');
+        var chart3 = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ["PEOPLE"],
+                datasets: [{
+
+                    label: "PEOPLE",
+                    fill: false,
+                    //backgroundColor: 'rgb(52, 73, 94)',
+                    borderColor: 'rgb(41, 128, 185)',
+                    data: []
+
+
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+</body>
+
+</html>
